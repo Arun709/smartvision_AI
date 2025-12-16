@@ -10,6 +10,8 @@ scikit-learn==1.3.0
 seaborn==0.13.0
 datasets==2.19.0
 torch==2.1.2
+streamlit-webrtc
+
 
 
 
