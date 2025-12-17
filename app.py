@@ -5,10 +5,9 @@ from ultralytics import YOLO
 from PIL import Image
 import os
 import time
-import gc
 
 # ==========================================
-# 1. ULTIMATE UI CONFIGURATION
+# 1. PAGE CONFIGURATION
 # ==========================================
 st.set_page_config(
     page_title="PatrolIQ: Ultimate",
@@ -17,8 +16,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- THEME ENGINE: ONYX & NEON ---
-st.markdown("""
+# ==========================================
+# 2. THEME ENGINE: ONYX & NEON
+# ==========================================
+# We define the CSS in a variable to avoid syntax errors
+CEO_THEME_CSS = """
     <style>
     /* 1. BACKGROUND & FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap');
@@ -89,27 +91,35 @@ st.markdown("""
         box-shadow: 0 0 20px rgba(0, 201, 255, 0.6);
     }
     </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(CEO_THEME_CSS, unsafe_allow_html=True)
 
 # ==========================================
-# 2. LOAD ENGINE
+# 3. LOAD ENGINE
 # ==========================================
 @st.cache_resource
 def load_engine():
+    # Load General YOLO (Standard COCO model is best for robust object detection)
     model = YOLO('yolov8n.pt') 
+    
+    # Check for custom model, fallback to general if missing
     custom_path = 'models/distracted_driver_v2.pt'
-    custom_model = YOLO(custom_path) if os.path.exists(custom_path) else model
+    if os.path.exists(custom_path):
+        custom_model = YOLO(custom_path)
+    else:
+        custom_model = model
+        
     return model, custom_model
 
 try:
-    with st.spinner("⚡ Booting Neural Neural Networks..."):
+    with st.spinner("⚡ Booting Neural Networks..."):
         general_model, custom_model = load_engine()
-except:
-    st.error("System Error: Models not found.")
+except Exception as e:
+    st.error(f"System Error: {e}")
     st.stop()
 
 # ==========================================
-# 3. SIDEBAR NAVIGATION
+# 4. SIDEBAR NAVIGATION
 # ==========================================
 with st.sidebar:
     st.markdown("## 🛡️ PatrolIQ")
@@ -132,7 +142,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. PAGE: MISSION CONTROL (DASHBOARD)
+# 5. PAGE: MISSION CONTROL (DASHBOARD)
 # ==========================================
 if page == "🚀 MISSION CONTROL":
     st.markdown("<h1 style='text-align: center; font-size: 4rem;'>PATROLIQ AI</h1>", unsafe_allow_html=True)
@@ -174,10 +184,11 @@ if page == "🚀 MISSION CONTROL":
         </div>
         """, unsafe_allow_html=True)
 
+    # Placeholder image for visual appeal
     st.image("https://viso.ai/wp-content/uploads/2021/01/computer-vision-deep-learning-applications.jpg", use_container_width=True)
 
 # ==========================================
-# 5. PAGE: LIVE VISION (CAMERA)
+# 6. PAGE: LIVE VISION (CAMERA)
 # ==========================================
 elif page == "🎥 LIVE VISION":
     st.title("🎥 LIVE SURVEILLANCE FEED")
@@ -211,7 +222,8 @@ elif page == "🎥 LIVE VISION":
 
     if run:
         cap = cv2.VideoCapture(0)
-        if not cap.isOpened(): st.error("HARDWARE ERROR: Camera Locked")
+        if not cap.isOpened(): 
+            st.error("HARDWARE ERROR: Camera Locked")
         else:
             while run:
                 ret, frame = cap.read()
@@ -224,6 +236,7 @@ elif page == "🎥 LIVE VISION":
                 
                 # DRAW
                 annotated = results[0].plot()
+                # Convert BGR to RGB for Streamlit
                 vid_window.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), use_container_width=True)
                 
                 # STATS
@@ -233,7 +246,7 @@ elif page == "🎥 LIVE VISION":
             cap.release()
 
 # ==========================================
-# 6. PAGE: FORENSIC LAB (ANALYSIS)
+# 7. PAGE: FORENSIC LAB (ANALYSIS)
 # ==========================================
 elif page == "🧬 FORENSIC LAB":
     st.title("🧬 FORENSIC EVIDENCE ANALYSIS")
@@ -267,7 +280,9 @@ elif page == "🧬 FORENSIC LAB":
             with st.spinner("Triangulating Threat Vectors..."):
                 # 1. RUN AI
                 res = custom_model(arr, conf=conf)
-                if len(res[0].boxes) == 0: res = general_model(arr, conf=conf)
+                # Fallback if no objects found
+                if len(res[0].boxes) == 0: 
+                    res = general_model(arr, conf=conf)
                 
                 # 2. DRAW & ANALYZE
                 final_img = arr.copy()
