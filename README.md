@@ -9,10 +9,8 @@
 > An advanced computer vision system that goes beyond simple detection. SmartVisionAI uses **logic-based inference** (e.g., checking if a "Phone" intersects with a "Hand") to accurately identify distracted driving in real-time.
 
 ---
-## ⛓️‍💥 ![Streamlit LINK](https://arunsmartvisionai.streamlit.app/) 
-## 📸 Project Showcase
-<!-- Upload a screenshot of your "Holographic" UI here -->
-![SmartVision Interface](https://via.placeholder.com/800x400?text=SmartVision+AI+Dashboard+Screenshot)
+## ⛓️‍💥[Streamlit](https://arunsmartvisionai.streamlit.app/) 
+
 
 ## 🚀 Key Features
 
