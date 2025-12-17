@@ -145,7 +145,7 @@ with st.sidebar:
 # 5. PAGE: MISSION CONTROL (DASHBOARD)
 # ==========================================
 if page == "🚀 MISSION CONTROL":
-    st.markdown("<h1 style='text-align: center; font-size: 4rem;'>PATROLIQ AI</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 4rem;'>Smart Vison AI</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #aaa; letter-spacing: 3px;'>NEXT-GEN SITUATIONAL AWARENESS</p>", unsafe_allow_html=True)
     st.write("")
 
@@ -385,4 +385,5 @@ elif page == "🧬 FORENSIC LAB":
                             <p>Driver is focused. No distractions identified.</p>
                         </div>
                         """, unsafe_allow_html=True)
+
 
